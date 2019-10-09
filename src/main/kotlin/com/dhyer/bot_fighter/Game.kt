@@ -4,4 +4,7 @@ import java.util.*
 
 class Game {
   var id: UUID = UUID.randomUUID()
+
+  private val gameThread = Thread(this)
+
 }
