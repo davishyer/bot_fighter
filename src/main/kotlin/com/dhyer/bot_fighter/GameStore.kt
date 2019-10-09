@@ -6,9 +6,9 @@ import java.util.*
 
 @Service
 class GameStore {
-  private val games: MutableMap<UUID, Game> = HashMap()
+  private val games: MutableMap<Int, Game> = HashMap()
 
-  fun createGame(): UUID {
+  fun createGame(): Int {
     val game = Game()
     game.addPlayer("Foo")
     game.addPlayer("Bar")
@@ -20,7 +20,7 @@ class GameStore {
     return this.games.values
   }
 
-  fun find(id: UUID): Game {
+  fun find(id: Int): Game {
     return this.games[id] ?: throw InvalidRequestException("The requested game does not exist: $id")
   }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 data class CreateGameResponse(
-  val gameId: UUID
+  val gameId: Int
 )
 
 data class ShowGamesResponse(
@@ -38,7 +38,7 @@ class GamesController @Autowired constructor(
 
   @PostMapping("/{gameId}/move")
   fun queueMove(
-    @PathVariable gameId: UUID,
+    @PathVariable gameId: Int,
     @RequestBody movesToQueue: QueueMovesRequest
   ) {
     gameStore.find(gameId).queueMoves(movesToQueue.id, movesToQueue.moves)
