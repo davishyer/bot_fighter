@@ -1,7 +1,6 @@
 package com.dhyer.bot_fighter
 
 import com.dhyer.bot_fighter.exceptions.InvalidRequestException
-import sun.audio.AudioPlayer.player
 import java.awt.Point
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -13,6 +12,7 @@ class Game {
     const val WIDTH: Int = 10
     const val HEIGHT: Int = 4
     const val MAX_PLAYERS: Int = 2
+    const val TICK_DURATION: Long = 1 // in seconds
 
     val COUNT: AtomicInteger = AtomicInteger()
   }
@@ -23,7 +23,7 @@ class Game {
   fun addPlayer(name: String) {
     this.players.add(Player(getStartingPoint(), name))
     if (this.players.size == Game.MAX_PLAYERS) {
-      fixedRateTimer("Game $this.id", false, 0L, 1 * 1000) {
+      fixedRateTimer("Game $this.id", false, 0L, Game.TICK_DURATION * 1000) {
         tick(this)
       }
     }
@@ -45,6 +45,7 @@ class Game {
   private fun tick(timerTask: TimerTask) {
     println("tick called for game $id")
     val actions = this.players.mapNotNull { it.getNextAction() }
+    // TODO order based on creation timestamp
     actions.forEach { it.execute() }
     if (id != Game.COUNT.get()) timerTask.cancel()
   }
