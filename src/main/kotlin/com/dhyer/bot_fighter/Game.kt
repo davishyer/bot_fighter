@@ -45,8 +45,7 @@ class Game {
 
   private fun tick(timerTask: TimerTask) {
     println("tick called for game $id")
-    val actions = this.players.mapNotNull { it.getNextAction() }
-    // TODO order based on creation timestamp
+    val actions = this.players.mapNotNull { it.getNextAction() }.sortedBy { it.createdAt }
     actions.forEach { it.execute() }
     this.tickCount += 1
     if (this.tickCount == Game.TICK_LIMIT) {

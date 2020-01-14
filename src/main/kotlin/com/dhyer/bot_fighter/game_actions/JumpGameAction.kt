@@ -2,8 +2,9 @@ package com.dhyer.bot_fighter.game_actions
 
 import com.dhyer.bot_fighter.Game
 import com.dhyer.bot_fighter.Player
+import java.time.LocalDateTime
 
-class JumpGameAction(private val player: Player) : GameAction {
+class JumpGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
   override fun execute() {
     println("\tJumping player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")

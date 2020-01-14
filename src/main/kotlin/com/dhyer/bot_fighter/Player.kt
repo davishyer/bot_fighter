@@ -7,6 +7,7 @@ import java.util.*
 class Player constructor(position: Array<Point>, name: String) {
   companion object {
     const val HEIGHT: Int = 2
+    const val MAX_QUEUED_MOVES: Int = 10
   }
 //  var id: UUID = UUID.randomUUID()
   var id: String = name
@@ -16,8 +17,9 @@ class Player constructor(position: Array<Point>, name: String) {
   private var actionQueue: Queue<GameAction> = Queue()
 
   fun enqueueMove(move: GameMove) {
-    // TODO queue size limit, move validation
-    this.moveQueue.enqueue(move)
+    if(this.moveQueue.count() < Player.MAX_QUEUED_MOVES) {
+      this.moveQueue.enqueue(move)
+    }
   }
 
   fun getNextAction(): GameAction? {

@@ -2,6 +2,7 @@ package com.dhyer.bot_fighter
 
 import com.dhyer.bot_fighter.exceptions.InvalidRequestException
 import com.fasterxml.jackson.annotation.JsonCreator
+import java.time.LocalDateTime
 
 enum class GameMoveDirection constructor(private val text: String) {
   UP("up"),
@@ -43,6 +44,8 @@ class GameMove constructor(
   private val direction: GameMoveDirection?,
   private val button: GameMoveButton?
 ) {
+  val createdAt: LocalDateTime = LocalDateTime.now()
+
   override fun toString(): String {
     return directionToString() + buttonToString()
   }

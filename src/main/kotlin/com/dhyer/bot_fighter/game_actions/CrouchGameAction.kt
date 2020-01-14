@@ -1,8 +1,9 @@
 package com.dhyer.bot_fighter.game_actions
 
 import com.dhyer.bot_fighter.Player
+import java.time.LocalDateTime
 
-class CrouchGameAction(private val player: Player) : GameAction {
+class CrouchGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
   override fun execute() {
     println("\tCrouching player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")

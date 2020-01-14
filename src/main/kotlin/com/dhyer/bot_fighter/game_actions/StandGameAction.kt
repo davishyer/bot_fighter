@@ -2,8 +2,9 @@ package com.dhyer.bot_fighter.game_actions
 
 import com.dhyer.bot_fighter.Player
 import java.awt.Point
+import java.time.LocalDateTime
 
-class StandGameAction(private val player: Player) : GameAction {
+class StandGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
   override fun execute() {
     println("\tStanding player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")

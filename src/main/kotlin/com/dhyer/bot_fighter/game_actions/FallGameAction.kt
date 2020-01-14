@@ -1,8 +1,9 @@
 package com.dhyer.bot_fighter.game_actions
 
 import com.dhyer.bot_fighter.Player
+import java.time.LocalDateTime
 
-class FallGameAction(private val player: Player) : GameAction {
+class FallGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
   override fun execute() {
     println("\tFalling player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")
