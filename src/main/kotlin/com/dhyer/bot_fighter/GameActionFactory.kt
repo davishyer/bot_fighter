@@ -1,15 +1,18 @@
 package com.dhyer.bot_fighter
 
+import com.dhyer.bot_fighter.game_actions.CrouchGameAction
+import com.dhyer.bot_fighter.game_actions.FallGameAction
 import com.dhyer.bot_fighter.game_actions.GameAction
-import com.dhyer.bot_fighter.game_actions.MoveGameAction
+import com.dhyer.bot_fighter.game_actions.JumpGameAction
+import com.dhyer.bot_fighter.game_actions.StandGameAction
 
 class GameActionFactory {
   companion object {
-    fun generateActionsFor(move: GameMove?): List<GameAction> {
+    fun generateActionsFor(move: GameMove?, player: Player): List<GameAction> {
       return when (move?.toString()) {
-        "↑" -> handleUp()
+        "↑" -> handleUp(player)
         "→" -> handleRight()
-        "↓" -> handleDown()
+        "↓" -> handleDown(player)
         "←" -> handleLeft()
         "A" -> handleAttack()
         "B" -> handleBlock()
@@ -25,20 +28,27 @@ class GameActionFactory {
       }
     }
 
-    private fun handleUp(): List<GameAction> {
-      // TODO implement
+    private fun handleUp(player: Player): List<GameAction> {
       println("handling up")
-      return emptyList()
+      return if(player.isCrouched()) {
+        listOf(StandGameAction(player))
+      } else {
+        listOf(
+          JumpGameAction(player),
+          // TODO need to fall more if the board height changes
+          FallGameAction(player),
+          FallGameAction(player)
+        )
+      }
     }
     private fun handleRight(): List<GameAction> {
       // TODO implement
       println("handling right")
       return emptyList()
     }
-    private fun handleDown(): List<GameAction> {
-      // TODO implement
+    private fun handleDown(player: Player): List<GameAction> {
       println("handling down")
-      return emptyList()
+      return listOf(CrouchGameAction(player))
     }
     private fun handleLeft(): List<GameAction> {
       // TODO implement

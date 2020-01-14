@@ -4,7 +4,6 @@ import com.dhyer.bot_fighter.exceptions.InvalidRequestException
 import java.awt.Point
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.stream.Collectors
 import kotlin.concurrent.fixedRateTimer
 
 class Game {
@@ -13,10 +12,12 @@ class Game {
     const val HEIGHT: Int = 4
     const val MAX_PLAYERS: Int = 2
     const val TICK_DURATION: Long = 1 // in seconds
+    const val TICK_LIMIT: Int = 60
 
     val COUNT: AtomicInteger = AtomicInteger()
   }
   var id: Int = Game.COUNT.incrementAndGet()
+  var tickCount: Int = 0
   private var players: MutableCollection<Player> = mutableListOf()
 
 
@@ -36,8 +37,8 @@ class Game {
 
   private fun getStartingPoint(): Array<Point> {
     return when (this.players.size) {
-      0 -> arrayOf(Point(0, Game.HEIGHT - 2), Point(0, Game.HEIGHT - 1))
-      1 -> arrayOf(Point(Game.WIDTH - 1, Game.HEIGHT - 2), Point(Game.WIDTH - 1, Game.HEIGHT - 1))
+      0 -> arrayOf(Point(0, 0), Point(0, 1))
+      1 -> arrayOf(Point(Game.WIDTH - 1, 0), Point(Game.WIDTH - 1, 1))
       else -> throw InvalidRequestException("The game is already full")
     }
   }
@@ -47,6 +48,10 @@ class Game {
     val actions = this.players.mapNotNull { it.getNextAction() }
     // TODO order based on creation timestamp
     actions.forEach { it.execute() }
-    if (id != Game.COUNT.get()) timerTask.cancel()
+    this.tickCount += 1
+    if (this.tickCount == Game.TICK_LIMIT) {
+      println("ending game $id")
+      timerTask.cancel()
+    }
   }
 }
