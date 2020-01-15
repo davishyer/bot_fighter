@@ -5,8 +5,11 @@ import java.awt.Point
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.fixedRateTimer
+import kotlin.concurrent.schedule
 
-class Game {
+class Game constructor(
+  private val gameStore: GameStore
+) {
   companion object {
     const val WIDTH: Int = 10
     const val HEIGHT: Int = 4
@@ -35,6 +38,14 @@ class Game {
     moves.forEach { player.enqueueMove(it) }
   }
 
+  fun endGame() {
+    val gameId = this.id
+    println("Marking game $gameId for deletion")
+    Timer("Ending game $gameId", false).schedule(10 * 1000) {
+      gameStore.removeGame(gameId)
+    }
+  }
+
   private fun getStartingPoint(): Array<Point> {
     return when (this.players.size) {
       0 -> arrayOf(Point(0, 0), Point(0, 1))
@@ -51,6 +62,7 @@ class Game {
     if (this.tickCount == Game.TICK_LIMIT) {
       println("ending game $id")
       timerTask.cancel()
+      endGame()
     }
   }
 }

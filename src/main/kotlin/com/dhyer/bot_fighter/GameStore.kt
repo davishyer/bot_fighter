@@ -9,7 +9,7 @@ class GameStore {
   private val games: MutableMap<Int, Game> = HashMap()
 
   fun createGame(): Int {
-    val game = Game()
+    val game = Game(this)
     game.addPlayer("Foo")
     game.addPlayer("Bar")
     this.games[game.id] = game
@@ -22,5 +22,10 @@ class GameStore {
 
   fun find(id: Int): Game {
     return this.games[id] ?: throw InvalidRequestException("The requested game does not exist: $id")
+  }
+
+  fun removeGame(id: Int) {
+    println("Removing game $id")
+    this.games.remove(id)
   }
 }
