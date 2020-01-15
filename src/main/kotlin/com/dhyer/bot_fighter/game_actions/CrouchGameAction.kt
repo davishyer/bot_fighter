@@ -4,7 +4,7 @@ import com.dhyer.bot_fighter.Player
 import java.time.LocalDateTime
 
 class CrouchGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
-  override fun execute() {
+  override fun execute(opponent: Player) {
     println("\tCrouching player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")
     // remove all player positions, aside from the bottom row

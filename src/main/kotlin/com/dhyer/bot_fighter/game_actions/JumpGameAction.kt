@@ -5,7 +5,7 @@ import com.dhyer.bot_fighter.Player
 import java.time.LocalDateTime
 
 class JumpGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
-  override fun execute() {
+  override fun execute(opponent: Player) {
     println("\tJumping player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")
     // Shift all player location points to the top of the

@@ -4,5 +4,5 @@ import com.dhyer.bot_fighter.Player
 import java.time.LocalDateTime
 
 abstract class GameAction(val player: Player, val createdAt: LocalDateTime) {
-  abstract fun execute()
+  abstract fun execute(opponent: Player)
 }

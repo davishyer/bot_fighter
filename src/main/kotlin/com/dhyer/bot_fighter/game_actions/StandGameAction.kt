@@ -5,7 +5,7 @@ import java.awt.Point
 import java.time.LocalDateTime
 
 class StandGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
-  override fun execute() {
+  override fun execute(opponent: Player) {
     println("\tStanding player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")
     val currentX = this.player.location.elementAt(0).x

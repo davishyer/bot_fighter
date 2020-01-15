@@ -1,9 +1,13 @@
 package com.dhyer.bot_fighter
 
+import com.dhyer.bot_fighter.game_actions.AttackGameAction
+import com.dhyer.bot_fighter.game_actions.AttackLagGameAction
+import com.dhyer.bot_fighter.game_actions.BlockGameAction
 import com.dhyer.bot_fighter.game_actions.CrouchGameAction
 import com.dhyer.bot_fighter.game_actions.FallGameAction
 import com.dhyer.bot_fighter.game_actions.GameAction
 import com.dhyer.bot_fighter.game_actions.JumpGameAction
+import com.dhyer.bot_fighter.game_actions.MoveGameAction
 import com.dhyer.bot_fighter.game_actions.StandGameAction
 import java.time.LocalDateTime
 
@@ -12,11 +16,11 @@ class GameActionFactory {
     fun generateActionsFor(move: GameMove?, player: Player): List<GameAction> {
       return when (move?.toString()) {
         "↑" -> handleUp(player, move.createdAt)
-        "→" -> handleRight()
+        "→" -> handleRight(player, move.createdAt)
         "↓" -> handleDown(player, move.createdAt)
-        "←" -> handleLeft()
-        "A" -> handleAttack()
-        "B" -> handleBlock()
+        "←" -> handleLeft(player, move.createdAt)
+        "A" -> handleAttack(player, move.createdAt)
+        "B" -> handleBlock(player, move.createdAt)
         "↑A" -> handleUpAttack()
         "↑B" -> handleUpBlock()
         "→A" -> handleRightAttack()
@@ -42,29 +46,43 @@ class GameActionFactory {
         )
       }
     }
-    private fun handleRight(): List<GameAction> {
-      // TODO implement
+    private fun handleRight(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling right")
-      return emptyList()
+      return if(player.isCrouched()) {
+        listOf(
+          StandGameAction(player, timestamp),
+          MoveGameAction(player, timestamp, 1)
+        )
+      } else {
+        listOf(MoveGameAction(player, timestamp, 1))
+      }
     }
     private fun handleDown(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling down")
       return listOf(CrouchGameAction(player, timestamp))
     }
-    private fun handleLeft(): List<GameAction> {
-      // TODO implement
+    private fun handleLeft(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling left")
-      return emptyList()
+      return if(player.isCrouched()) {
+        listOf(
+          StandGameAction(player, timestamp),
+          MoveGameAction(player, timestamp, -1)
+        )
+      } else {
+        listOf(MoveGameAction(player, timestamp, -1))
+      }
     }
-    private fun handleAttack(): List<GameAction> {
-      // TODO implement
+    private fun handleAttack(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling attack")
-      return emptyList()
+      return listOf(
+        StandGameAction(player, timestamp),
+        AttackGameAction(player, timestamp),
+        AttackLagGameAction(player, timestamp)
+      )
     }
-    private fun handleBlock(): List<GameAction> {
-      // TODO implement
+    private fun handleBlock(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling block")
-      return emptyList()
+      return listOf(BlockGameAction(player, timestamp))
     }
     private fun handleUpAttack(): List<GameAction> {
       // TODO implement
