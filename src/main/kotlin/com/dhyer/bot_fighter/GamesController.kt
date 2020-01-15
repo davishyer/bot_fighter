@@ -1,7 +1,9 @@
 package com.dhyer.bot_fighter
 
+import com.dhyer.bot_fighter.annotations.Private
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -33,6 +35,7 @@ class GamesController @Autowired constructor(
   fun create(): CreateGameResponse = CreateGameResponse(gameStore.createGame())
 
   @GetMapping
+  // TODO: hide server bot games by query param
   fun index(): ShowGamesResponse = ShowGamesResponse(gameStore.getGames())
 
   @PostMapping("/{gameId}/move")
@@ -41,5 +44,12 @@ class GamesController @Autowired constructor(
     @RequestBody movesToQueue: QueueMovesRequest
   ) {
     gameStore.find(gameId).queueMoves(movesToQueue.id, movesToQueue.moves)
+  }
+
+  @DeleteMapping
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @Private
+  fun clearGames() {
+    gameStore.clear()
   }
 }
