@@ -57,7 +57,10 @@ class Game constructor(
   private fun tick(timerTask: TimerTask) {
     println("tick called for game $id")
     val actions = this.players.mapNotNull { it.getNextAction() }.sortedBy { it.createdAt }
-    actions.forEach { it.execute() }
+    actions.forEach { action ->
+      val opponent = this.players.find { it.id != action.player.id } ?: throw RuntimeException("Could not find opponent player object")
+      action.execute(opponent)
+    }
     this.tickCount += 1
     if (this.tickCount == Game.TICK_LIMIT) {
       println("ending game $id")

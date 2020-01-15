@@ -4,7 +4,7 @@ import com.dhyer.bot_fighter.Player
 import java.time.LocalDateTime
 
 class FallGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
-  override fun execute() {
+  override fun execute(opponent: Player) {
     println("\tFalling player: ${this.player.id}")
     println("\t\tStarting at: ${this.player.printLocation()}")
     // Shift all player location points down one on the

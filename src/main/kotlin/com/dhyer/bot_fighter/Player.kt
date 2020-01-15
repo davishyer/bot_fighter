@@ -1,6 +1,7 @@
 package com.dhyer.bot_fighter
 
 import com.dhyer.bot_fighter.game_actions.GameAction
+import com.dhyer.bot_fighter.PlayerState
 import java.awt.Point
 import java.util.*
 
@@ -13,6 +14,8 @@ class Player constructor(position: Array<Point>, name: String) {
   var id: String = name
   var health: Long = 100
   var location: MutableCollection<Point> = position.toMutableList()
+  var state: PlayerState = PlayerState.Idle
+  var isFacingRight: Boolean = true
   private var moveQueue: Queue<GameMove> = Queue()
   private var actionQueue: Queue<GameAction> = Queue()
 
