@@ -25,7 +25,7 @@ class Game constructor(
 
 
   fun addPlayer(name: String) {
-    this.players.add(Player(getStartingPoint(), name))
+    this.players.add(Player(getStartingPoint(), name, getStartingDirection()))
     if (this.players.size == Game.MAX_PLAYERS) {
       fixedRateTimer("Game $this.id", false, 0L, Game.TICK_DURATION * 1000) {
         tick(this)
@@ -54,6 +54,10 @@ class Game constructor(
     }
   }
 
+  private fun getStartingDirection(): Boolean {
+    return this.players.size == 0
+  }
+
   private fun tick(timerTask: TimerTask) {
     println("tick called for game $id")
     val actions = this.players.mapNotNull { it.getNextAction() }.sortedBy { it.createdAt }
@@ -61,11 +65,21 @@ class Game constructor(
       val opponent = this.players.find { it.id != action.player.id } ?: throw RuntimeException("Could not find opponent player object")
       action.execute(opponent)
     }
+
+    faceOpponent(this.players.elementAt(0), this.players.elementAt(1))
+    faceOpponent(this.players.elementAt(1), this.players.elementAt(0))
+
     this.tickCount += 1
     if (this.tickCount == Game.TICK_LIMIT) {
       println("ending game $id")
       timerTask.cancel()
       endGame()
+    }
+  }
+
+  private fun faceOpponent(player: Player, opponent: Player) {
+    if (player.location.elementAt(0).y == 0 && player.location.elementAt(0).x != opponent.location.elementAt(0).x) {
+      player.isFacingRight = player.location.elementAt(0).x < opponent.location.elementAt(0).x
     }
   }
 }

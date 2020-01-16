@@ -5,7 +5,7 @@ import com.dhyer.bot_fighter.PlayerState
 import java.awt.Point
 import java.util.*
 
-class Player constructor(position: Array<Point>, name: String) {
+class Player constructor(position: Array<Point>, name: String, isFacingRight: Boolean) {
   companion object {
     const val HEIGHT: Int = 2
     const val MAX_QUEUED_MOVES: Int = 10
@@ -15,7 +15,7 @@ class Player constructor(position: Array<Point>, name: String) {
   var health: Long = 100
   var location: MutableCollection<Point> = position.toMutableList()
   var state: PlayerState = PlayerState.Idle
-  var isFacingRight: Boolean = true
+  var isFacingRight: Boolean = isFacingRight
   private var moveQueue: Queue<GameMove> = Queue()
   private var actionQueue: Queue<GameAction> = Queue()
 
