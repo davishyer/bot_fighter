@@ -40,6 +40,17 @@ class Player constructor(position: Array<Point>, name: String, isFacingRight: Bo
     return this.location.size == 1
   }
 
+  fun hitTestOpponent(opponent: Player, hitbox: Point): Point? {
+    // hitbox point is relative to player's location at index 0
+    val x = this.location.elementAt(0).x + hitbox.x
+    val y = this.location.elementAt(0).y + hitbox.y
+    return opponent.location.find { it.x == x && it.y == y }
+  }
+
+  fun takeDamage(damage: Int) {
+    this.health = Math.max(0, this.health - damage)
+  }
+
   fun printLocation(): String {
     return Arrays.toString(this.location.toTypedArray())
   }

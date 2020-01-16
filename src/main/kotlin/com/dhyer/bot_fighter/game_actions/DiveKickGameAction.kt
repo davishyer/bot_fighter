@@ -16,7 +16,15 @@ class DiveKickGameAction(player: Player, createdAt: LocalDateTime) : GameAction(
       it.y -= 1
     }
     val hitbox = Point(side, 0)
-    // TODO: hit testing
+    if (this.player.hitTestOpponent(opponent, hitbox) != null) {
+      if (opponent.state != PlayerState.Blocking) {
+        val damage = 20
+        opponent.takeDamage(damage)
+        println("\t${opponent.id} takes $damage damage!")
+      } else {
+        println("\t${opponent.id} blocks the kick")
+      }
+    }
     println("\t\tEnded at: ${this.player.printLocation()}")
     println("\t\tHitbox at: ${this.player.hitbox}")
   }

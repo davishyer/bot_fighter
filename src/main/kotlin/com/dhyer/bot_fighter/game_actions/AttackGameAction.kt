@@ -8,27 +8,20 @@ import java.time.LocalDateTime
 class AttackGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
   override fun execute(opponent: Player) {
     player.state = PlayerState.Attacking
+    val side = if (player.isFacingRight) 1 else -1
+    val hitbox = Point(side, if (player.isCrouched()) 0 else 1)
 
-    if (isHit(opponent)) {
+    if (player.hitTestOpponent(opponent, hitbox) != null) {
       println("\tAttacking player: ${this.player.id}")
-      // TODO blocked or damage
+      if (opponent.state != PlayerState.Blocking) {
+        val damage = 20
+        opponent.takeDamage(damage)
+        println("\t${opponent.id} takes $damage damage!")
+      } else {
+        println("\t${opponent.id} blocks the attack")
+      }
     } else {
       println("\tPlayer ${this.player.id} attacked but missed!")
     }
-  }
-
-  fun isHit(opponent: Player): Boolean {
-    val x = getSingleXCoord(player)
-    val opponentX = getSingleXCoord(opponent)
-    val side = if (player.isFacingRight) 1 else -1
-
-    val isWithinRange = x + side == opponentX
-    val isOverTheHead = !player.isCrouched() && opponent.isCrouched()
-
-    return isWithinRange && !isOverTheHead
-  }
-
-  fun getSingleXCoord(player: Player): Int {
-    return player.location.map { it.x }.min() ?: 0
   }
 }
