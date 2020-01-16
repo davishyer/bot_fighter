@@ -2,6 +2,7 @@ package com.dhyer.bot_fighter.game_actions
 
 import com.dhyer.bot_fighter.Game
 import com.dhyer.bot_fighter.Player
+import com.dhyer.bot_fighter.PlayerState
 import java.time.LocalDateTime
 
 class JumpGameAction(player: Player, createdAt: LocalDateTime) : GameAction(player, createdAt) {
@@ -12,6 +13,7 @@ class JumpGameAction(player: Player, createdAt: LocalDateTime) : GameAction(play
     // game board. Player height is subtracted to fit the
     // player on the board
     this.player.location.forEach { it.y += (Game.HEIGHT - Player.HEIGHT) }
+    this.player.state = PlayerState.Jumping
     println("\t\tEnded at: ${this.player.printLocation()}")
   }
 }

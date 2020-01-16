@@ -4,6 +4,7 @@ import com.dhyer.bot_fighter.game_actions.AttackGameAction
 import com.dhyer.bot_fighter.game_actions.AttackLagGameAction
 import com.dhyer.bot_fighter.game_actions.BlockGameAction
 import com.dhyer.bot_fighter.game_actions.CrouchGameAction
+import com.dhyer.bot_fighter.game_actions.DiveKickGameAction
 import com.dhyer.bot_fighter.game_actions.FallGameAction
 import com.dhyer.bot_fighter.game_actions.GameAction
 import com.dhyer.bot_fighter.game_actions.JumpGameAction
@@ -21,14 +22,14 @@ class GameActionFactory {
         "←" -> handleLeft(player, move.createdAt)
         "A" -> handleAttack(player, move.createdAt)
         "B" -> handleBlock(player, move.createdAt)
-        "↑A" -> handleUpAttack()
-        "↑B" -> handleUpBlock()
-        "→A" -> handleRightAttack()
-        "→B" -> handleRightBlock()
-        "↓A" -> handleDownAttack()
-        "↓B" -> handleDownBlock()
-        "←A" -> handleLeftAttack()
-        "←B" -> handleLeftBlock()
+        "↑A" -> handleUpAttack(player, move.createdAt)
+        "↑B" -> handleUpBlock(player, move.createdAt)
+        "→A" -> handleRightAttack(player, move.createdAt)
+        "→B" -> handleRightBlock(player, move.createdAt)
+        "↓A" -> handleDownAttack(player, move.createdAt)
+        "↓B" -> handleDownBlock(player, move.createdAt)
+        "←A" -> handleLeftAttack(player, move.createdAt)
+        "←B" -> handleLeftBlock(player, move.createdAt)
         else -> emptyList()
       }
     }
@@ -84,45 +85,46 @@ class GameActionFactory {
       println("handling block")
       return listOf(BlockGameAction(player, timestamp))
     }
-    private fun handleUpAttack(): List<GameAction> {
-      // TODO implement
+    private fun handleUpAttack(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling up attack")
-      return emptyList()
+      return if (player.isCrouched()) {
+        handleAttack(player, timestamp)
+      } else {
+        listOf(
+          JumpGameAction(player, timestamp),
+          DiveKickGameAction(player, timestamp),
+          DiveKickGameAction(player, timestamp),
+          StandGameAction(player, timestamp)
+        )
+      }
     }
-    private fun handleUpBlock(): List<GameAction> {
-      // TODO implement
+    private fun handleUpBlock(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling up block")
-      return emptyList()
+      return handleUp(player, timestamp) + handleBlock(player, timestamp)
     }
-    private fun handleRightAttack(): List<GameAction> {
-      // TODO implement
+    private fun handleRightAttack(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling right attack")
-      return emptyList()
+      return handleRight(player, timestamp) + handleAttack(player, timestamp)
     }
-    private fun handleRightBlock(): List<GameAction> {
-      // TODO implement
+    private fun handleRightBlock(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling right block")
-      return emptyList()
+      return handleRight(player, timestamp) + handleBlock(player, timestamp)
     }
-    private fun handleDownAttack(): List<GameAction> {
-      // TODO implement
+    private fun handleDownAttack(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling down attack")
-      return emptyList()
+      return handleDown(player, timestamp) + handleAttack(player, timestamp)
     }
-    private fun handleDownBlock(): List<GameAction> {
-      // TODO implement
+    private fun handleDownBlock(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling down block")
-      return emptyList()
+      return handleDown(player, timestamp) + handleBlock(player, timestamp)
     }
-    private fun handleLeftAttack(): List<GameAction> {
-      // TODO implement
+    private fun handleLeftAttack(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling left attack")
-      return emptyList()
+      return handleLeft(player, timestamp) + handleAttack(player, timestamp)
     }
-    private fun handleLeftBlock(): List<GameAction> {
-      // TODO implement
+    private fun handleLeftBlock(player: Player, timestamp: LocalDateTime): List<GameAction> {
       println("handling left block")
-      return emptyList()
+      return handleLeft(player, timestamp) + handleBlock(player, timestamp)
     }
   }
 }
