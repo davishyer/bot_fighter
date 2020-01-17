@@ -26,6 +26,6 @@ class DiveKickGameAction(player: Player, createdAt: LocalDateTime) : GameAction(
       }
     }
     println("\t\tEnded at: ${this.player.printLocation()}")
-    println("\t\tHitbox at: ${this.player.hitbox}")
+    println("\t\tHitbox at: $hitbox")
   }
 }
