@@ -1,12 +1,14 @@
 package com.dhyer.bot_fighter
 
 import com.dhyer.bot_fighter.exceptions.InvalidRequestException
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import java.awt.Point
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.fixedRateTimer
 import kotlin.concurrent.schedule
 
+@JsonSerialize(using = GameSerializer::class)
 class Game constructor(
   private val gameStore: GameStore
 ) {
@@ -20,8 +22,8 @@ class Game constructor(
     val COUNT: AtomicInteger = AtomicInteger()
   }
   var id: Int = Game.COUNT.incrementAndGet()
-  var tickCount: Int = 0
-  private var players: MutableCollection<Player> = mutableListOf()
+  private var tickCount: Int = 0
+  var players: MutableCollection<Player> = mutableListOf()
 
 
   fun addPlayer(name: String) {
@@ -45,6 +47,10 @@ class Game constructor(
       gameStore.removeGame(gameId)
     }
   }
+
+  fun timeRemaining() = (Game.TICK_LIMIT * Game.TICK_DURATION) - this.tickCount
+
+  fun getWinner() = null
 
   private fun getStartingPoint(): Array<Point> {
     return when (this.players.size) {
