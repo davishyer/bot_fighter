@@ -54,4 +54,7 @@ class Player constructor(position: Array<Point>, name: String, isFacingRight: Bo
   fun printLocation(): String {
     return Arrays.toString(this.location.toTypedArray())
   }
+
+  fun verticalLocation() = this.location.maxBy { it.y }!!.x
+  fun torsoYCoordinate() = this.location.maxBy { it.y }!!.y
 }

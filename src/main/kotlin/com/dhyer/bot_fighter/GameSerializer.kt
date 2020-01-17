@@ -26,11 +26,21 @@ class GameSerializer : StdSerializer<Game>(Game::class.java) {
       gen?.writeEndArray()
 
       gen?.writeArrayFieldStart("attacking_cells")
-      // TODO determine attacked cells
+      if(it.state == PlayerState.Attacking) {
+        gen?.writeStartObject()
+        gen?.writeNumberField("x", it.verticalLocation() + (if(it.isFacingRight) 1 else -1))
+        gen?.writeNumberField("y", it.torsoYCoordinate())
+        gen?.writeEndObject()
+      }
       gen?.writeEndArray()
 
       gen?.writeArrayFieldStart("blocking_cells")
-      // TODO determine blocked cells
+      if(it.state == PlayerState.Blocking) {
+        gen?.writeStartObject()
+        gen?.writeNumberField("x", it.verticalLocation())
+        gen?.writeNumberField("y", it.torsoYCoordinate())
+        gen?.writeEndObject()
+      }
       gen?.writeEndArray()
 
       gen?.writeEndObject()
