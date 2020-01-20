@@ -27,8 +27,9 @@ fun main() {
         ws.onBinaryMessage { context ->
             val byteArray = context.data().toByteArray()
             val session = context.session
+            val sessionBytes = sessionToPlayers.values.toList().toByteArray()
 
-            session.remote.sendBytes(ByteBuffer.wrap(toByteArray(sessionToPlayers.values.toList())))
+            session.remote.sendBytes(ByteBuffer.wrap(sessionBytes))
         }
         ws.onClose { context ->
             val session = context.session

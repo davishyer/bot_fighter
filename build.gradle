@@ -1,6 +1,7 @@
 buildscript {
 	ext {
 		kotlinVersion = '1.3.50'
+    kotlinxVersion = '0.1.15'
 		springBootVersion = '2.1.9.RELEASE'
 		swaggerVersion = '2.7.0'
 	}
@@ -32,6 +33,8 @@ dependencies {
 	compile "io.springfox:springfox-swagger-ui:$swaggerVersion"
 	compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 	compile "org.springframework.boot:spring-boot-starter-web"
+  compile "org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxVersion"
+  compile 'io.javalin:javalin:3.5.0'
 	testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
