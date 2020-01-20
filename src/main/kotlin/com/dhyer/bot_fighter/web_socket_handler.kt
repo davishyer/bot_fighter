@@ -1,42 +1,43 @@
 package com.dhyer.bot_fighter
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import io.javalin.Javalin
 import org.eclipse.jetty.websocket.api.Session
-import org.eclipse.jetty.websocket.api.annotations.*
-import java.util.concurrent.atomic.AtomicLong
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.nio.ByteBuffer
 
-fun main(args: Array<String>) {
-  port(9000)
-  staticFileLocation("/public")
-  webSocket("/ws", WebSocketHandler::class.java)
-  init()
-}
+val log: Logger = LoggerFactory.getLogger("main")
+@ExperimentalUnsignedTypes
+fun main() {
+    val app = Javalin.create().apply {
+        exception(Exception::class.java) { e, _ -> log.error("Javalin error", e) }
+        error(404) { ctx -> ctx.json("not found") }
+    }.start(8080)
 
-@WebSocket
-class WebSocketHandler {
+    app.config.addStaticFiles("/web")
 
-  val players = HashMap<Session, Player>()
-  var lastPlayerID = AtomicLong(0)
+    val sessionToPlayers = HashMap<Session, Player>()
 
-  @OnWebSocketConnect
-  fun connected(session: Session) = println("session connected")
+    app.ws("/") { ws ->
+        ws.onConnect { session ->
+            run {
+                log.info("New player connected: ${session.host()}")
+            }
+        }
+        ws.onBinaryMessage { context ->
+            val byteArray = context.data().toByteArray()
+            val session = context.session
 
-  @OnWebSocketClose
-  fun closed(session: Session, statusCode: Int, reason: String?) {
-  }
-
-  @OnWebSocketMessage
-  fun message(session: Session, json: String) {
-    val JSON = ObjectMapper().readTree(json)
-    val message = JSON.get("msg").asText()
-
-    when (message) {
-      "newplayer" -> {
-      }
-      "click" -> {
-      }
-      "test" -> println("test received")
+            session.remote.sendBytes(ByteBuffer.wrap(toByteArray(sessionToPlayers.values.toList())))
+        }
+        ws.onClose { context ->
+            val session = context.session
+            sessionToPlayers.remove(session)
+            log.info("Disconnected: ${session.remoteAddress}")
+        }
+        ws.onError { context ->
+            log.warn("Got Websocket error from: ${context.session.remoteAddress}", context.error())
+        }
     }
-    println("Got: $message")
-  }
+
 }
